@@ -1,1 +1,1 @@
-Encryption and decryption od messages in python
+Encryption and decryption of messages in python
