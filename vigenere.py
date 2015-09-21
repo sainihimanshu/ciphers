@@ -1,7 +1,7 @@
 def encipher(plainText = "himanhimanhimanhima", key = "hello"):
 
 	plainText = input("\n\nGimme something to encrypt: ")
-	#key = input("Give me a key(word) too: ")
+	key = input("Give me a key(word) too: ")
 
 	cipheredText = []
 	l = len(key)

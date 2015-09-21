@@ -1,8 +1,6 @@
 import math
 msg = "Mass bunk today"
 
-
-
 def encipher():
 	msg = input("\n\nGimme something to encrypt: ")
 	cols = int(input("Enter the number of columns: "))
