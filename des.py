@@ -87,6 +87,7 @@ def run_des():
 	ksn = rearrange(k, p1) #64 to 56
 	keySet = genKeySet(ksn)
 	em = encrypt(mb , keySet)
+	print("hi")
 	print("Generated key: " + ks + "\nEncrypted text: " + read(em))
 	print("Decrypted text: " + read(decrypt(em, keySet)) )
 
