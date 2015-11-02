@@ -13,6 +13,7 @@ xor = lambda x1, x2: tohex(toint(x1) ^ toint(x2) )
 
 slice = lambda mx, n:  [ mx[i:i+n] for i in range(0, n*(len(mx)//n) + 1, n ) ][:-1]
 
+hex2value = lambda s, table: table[int(s[0], base = 16)*16 + int(s[1], base = 16) ]
 
 #key expansion
 keys = [key] #This will hold 10 + 1 keys each of 16 bytes
@@ -22,7 +23,7 @@ for i in range(11):
 	lastcolumn = []
 	sk = shift(keys[-1][12:])
 	for i in sk:
-		lastcolumn.append(tohex(sbox[int(i[0], base = 16)*16 + int(i[1], base = 16) ]))
+		lastcolumn.append(tohex(hex2value(i, table)))
 
 	for i in range(4):
 		for a,b in zip(lastcolumn, keys[-1][i*4:i*4+4]):
@@ -51,7 +52,7 @@ for i in mmx:
 	j = 0
 	print(i)
 	print(int(i[0], base = 16)*16 + int(i[1], base = 16))
-	mmx[j] = tohex(sbox[int(i[0], base = 16)*16 + int(i[1], base = 16) ])
+	mmx[j] = tohex(hex2value(i, sbox))
 	j += 1
 
 #SHIFT ROW
@@ -61,6 +62,14 @@ for i in shifttable:
 	j += 1
 
 #Mix column key
+j = 0
+
+for i in mmx:
+	for k in range(4):
+		l = str(mxt[k*4 + j])
+		t = xor(t, hex2value( hex2value(l, L) + hex2value(i, L). E))
+	mmx[j] = 
+	j += 1 
 
 
 #Add round key
