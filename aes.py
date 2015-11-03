@@ -15,6 +15,9 @@ slice = lambda mx, n:  [ mx[i:i+n] for i in range(0, n*(len(mx)//n) + 1, n ) ][:
 
 hex2value = lambda s, table: table[int(s[0], base = 16)*16 + int(s[1], base = 16) ]
 
+hex2string = lambda hexTable: "".join(chr(toint(i)) for i in hexTable)
+
+
 #key expansion
 keys = [key] #This will hold 10 + 1 keys each of 16 bytes
 
@@ -23,7 +26,7 @@ for i in range(11):
 	lastcolumn = []
 	sk = shift(keys[-1][12:])
 	for i in sk:
-		lastcolumn.append(tohex(hex2value(i, table)))
+		lastcolumn.append(tohex(hex2value(i, sbox)))
 
 	for i in range(4):
 		for a,b in zip(lastcolumn, keys[-1][i*4:i*4+4]):
@@ -45,37 +48,67 @@ def msgInHex(msg):
 msg = input("Enter a message to encrypt: ")
 mx = msgInHex(msg)
 
+
+mmx = mx.copy()
+
+
 #encipher
 #BYTE SUB
-mmx = mx
-for i in mmx:
+def byteSub():
 	j = 0
-	print(i)
-	print(int(i[0], base = 16)*16 + int(i[1], base = 16))
-	mmx[j] = tohex(hex2value(i, sbox))
-	j += 1
+	for i in mmx:
+		mmx[j] = tohex(hex2value(i, sbox))
+		j += 1
 
 #SHIFT ROW
-j = 0
-for i in shifttable:
-	mmx[j] = mmx[i]
-	j += 1
+def rowShift():
+	j = 0
+	for i in shifttable:
+		mmx[j] = mmx[i]
+		j += 1
 
 #Mix column key
-j = 0
-
-for i in mmx:
-	for k in range(4):
-		l = str(mxt[k*4 + j])
-		t = xor(t, hex2value( hex2value(l, L) + hex2value(i, L). E))
-	mmx[j] = 
-	j += 1 
+def mixColumn():
+	j = 0
+	for oo in range(4):
+		for o in range(4):
+			for k in range(4):
+				l = str(mmx[k+oo*4])
+				i = str(mmx[k*4 + o])
+				#print(l,i) 
+				if k == 0: t1 = tohex(hex2value( str(tohex((hex2value(l, L) + hex2value(i, L))%0xff)) , E))
+				if k != 0: 
+					t = xor(t1, tohex(hex2value(str( tohex((hex2value(l, L) + hex2value(i, L))%0xff)) , E)))
+					t1 = t
+				#print(l, i, t1)
+			mmx[j] = t 
+			j += 1
 
 
 #Add round key
-for i in range(1,11):
+#xors the 16 bytes of key with 16 byte current state of message 
+def roundKey(i):
 	j = 0
-	for m,k in zip(mmx, keys[i] ):
+	for m,k in zip( mmx, keys[i] ):
 		mmx[j] = xor(m,k)
 		j += 1
 	print(mmx)
+
+def encrypt():
+	roundKey(0) #iteration 0
+
+	for i in range(1,8):
+		byteSub()
+		rowShift()
+		mixColumn()
+		roundKey(i)
+
+	byteSub()
+	rowShift()
+	roundKey(i)
+
+	roundKey(9)
+
+encrypt()
+hex2string(key)
+hex2string(mmx)
